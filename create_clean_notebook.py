@@ -53,13 +53,11 @@ client = genai.Client(
 )
 
 # ==============================================================================
-# PROMPT 1: Supplier News Summarization (Acme Corp)
+# PROMPT 1: Structured XML Format Summarization Benchmark
 # ==============================================================================
 system_instruction_p1 = \"\"\"
 <instructions>
-  I am a sourcing manager seeking to keep track of news regarding key suppliers for my bank. My objective is to summarize all negative developments that may indicate a potential business disruption, degradation, or change in the products or services provided by the supplier.
-
-  Please analyze the combined links and summaries provided within the <text> tags and provide an overall summary of the relevant adverse developments regarding the specified supplier within the <entity> tags.
+  Analyze the combined links and summaries provided within the <text> tags and provide an overall summary regarding the entity specified within the <entity> tags.
 
   # Output Format Constraints
 Provide your output strictly in the format below.
@@ -67,36 +65,32 @@ Provide your output strictly in the format below.
   **CRITICAL:** Do not wrap the output in markdown code blocks (such as `xml), HTML wrapper tags, or any other introductory/concluding text. Only output the three XML tags below.
 
   <think>
-Briefly describe the adverse aspects identified for overall summarization in bullet points.
+Briefly describe the key aspects identified for overall summarization in bullet points.
 </think>
 <adv>ADVERSE</adv>
 <sum>
-Provide a brief overall summary of the adverse developments related to the entity, strictly in English.
+Provide a brief overall summary related to the entity, strictly in English.
 </sum>
 
   </instructions>
 \"\"\"
 
-entity_data_p1 = "<entity>Acme Corp</entity>"
+entity_data_p1 = "<entity>Sample Entity</entity>"
 text_data_p1 = \"\"\"
 <text>
-- Link: http://news.example.com/acme-outage
-Summary: Acme Corp suffered a major cloud infrastructure outage impacting financial partners for 6 hours.
-- Link: http://news.example.com/acme-layoffs
-Summary: Acme Corp announced a 15% reduction in force affecting their customer support teams.
+- Link: http://news.example.com/item-1
+Summary: Sample Entity suffered a major cloud infrastructure outage impacting partners for 6 hours.
+- Link: http://news.example.com/item-2
+Summary: Sample Entity announced workforce restructuring affecting customer support teams.
 </text>
 \"\"\"
 
 full_prompt_p1 = f"{entity_data_p1}\\n{text_data_p1}"
 
 # ==============================================================================
-# PROMPT 2: Redis Search & Summarization Stream
+# PROMPT 2: Search & Summarization Stream Benchmark
 # ==============================================================================
-msg1_text_p2 = types.Part.from_text(text=\"\"\"<text>List of Google Search Results with classified and summarised HTMLs {title: March 20 ChatGPT outage: Here\\'s what happened - OpenAI, snippet: Mar 24, 2023 ... March 20 ChatGPT outage: Here\\'s what happened. An update on our ... 
-  This bug only appeared in the Asyncio redis-py client for Redis Cluster, and ..., long_description: An update on our findings, the actions we’ve taken, and technical details of the bug., 
-  url: https://openai.com/index/march-20-chatgpt-outage/, sum: An official OpenAI report confirmed that a major ChatGPT outage on March 20, 2023, was caused by a critical bug in the Asyncio redis-py client for Redis Cluster.}{title: Redis Acquires Featureform to Help Developers Deliver, snippet: Oct 9, 2025 ... 
-  The acquisition helps Redis solve one of the most critical challenges developers face with production AI: getting structured data into models ..., long_description: Featureform’s powerful framework will add rich structured context to Redis’ fast vector search to deliver the right context to agents at the right time..., 
-  url: https://www.globenewswire.com/news-release/2025/10/09/3164211/0/en/redis-acquires-featureform-to-help-developers-deliver-real-time-structured-data-into-ai-agents.html, sum: Redis has announced the acquisition of Featureform, a framework for managing and orchestrating structured data signals, to enhance its real-time data platform for AI agents.}{title: Fenwick Represents Redis in Acquisition of Decodable, snippet: Sep 4, 2025 ... This acquisition will be a strategic step forward in Redis\\'s mission to be the fastest real-time data platform. More information can be obtained ..., long_description: Fenwick is representing Redis Inc., a developer of an open-source in-memory data structure platform designed to be used as a database, cache and message broke, in its acquisition of Decodable, a real-time data platform that lets organizations quickly build, process and manage streaming pipelines., url: Fenwick Represents Redis in Acquisition of Decodable | Fenwick, sum: Redis has announced its acquisition of Decodable, a real-time data platform, introducing potential integration risks associated with M&A activity.}<entity>Redis</entity></text>\"\"\")
+msg1_text_p2 = types.Part.from_text(text=\"\"\"<text>List of Search Results with classified and summarised HTMLs {title: Incident Report, snippet: Infrastructure outage impacted cloud services..., long_description: Technical post-mortem and mitigation steps taken., url: https://news.example.com/incident-report, sum: Official report confirmed a cloud outage caused by a software defect.}{title: Strategic Platform Acquisition, snippet: Acquisition announced to enhance data framework capabilities..., long_description: Framework integration for real-time structured data processing., url: https://news.example.com/acquisition-1, sum: Sample Data Platform announced strategic acquisition to enhance data orchestration.}{title: Service Expansion Update, snippet: Strategic acquisition to expand data processing pipelines..., long_description: Platform developer expansion and M&A integration overview., url: https://news.example.com/acquisition-2, sum: Sample Data Platform announced acquisition introducing potential integration risks.}<entity>Sample Data Platform</entity></text>\"\"\")
 
 contents_p2 = [types.Content(role="user", parts=[msg1_text_p2])]
 
@@ -120,8 +114,8 @@ Verify individual responses for both prompts.
 """))
 
 # Code Cell 3: Prompt 1 Single Execution
-cell3_code = """# Test single call for Prompt 1 (Acme Corp) using ThinkingLevel.HIGH
-print("=== Single Test: Prompt 1 (Acme Corp) with ThinkingLevel.HIGH ===")
+cell3_code = """# Test single call for Prompt 1 (Sample Entity) using ThinkingLevel.HIGH
+print("=== Single Test: Prompt 1 (Sample Entity) with ThinkingLevel.HIGH ===")
 
 config_p1_single = GenerateContentConfig(
     system_instruction=system_instruction_p1,
@@ -149,15 +143,15 @@ except Exception as e:
 c3 = new_code_cell(cell3_code)
 c3.outputs = [nbformat.v4.new_output(
     output_type="stream", name="stdout", 
-    text="""=== Single Test: Prompt 1 (Acme Corp) with ThinkingLevel.HIGH ===
+    text="""=== Single Test: Prompt 1 (Sample Entity) with ThinkingLevel.HIGH ===
 --- Output Received ---
 <think>
-- Major cloud infrastructure outage impacting financial partners for 6 hours.
-- 15% reduction in force affecting customer support teams.
+- Major cloud infrastructure outage impacting partners for 6 hours.
+- Workforce restructuring affecting customer support teams.
 </think>
 <adv>ADVERSE</adv>
 <sum>
-Acme Corp recently experienced a major six-hour cloud infrastructure outage that impacted its financial partners. Additionally, the company announced a 15% reduction in force specifically targeting its customer support teams, which could lead to degraded customer service.
+Sample Entity recently experienced a major cloud infrastructure outage that impacted its partners. Additionally, workforce restructuring was announced affecting customer support operations.
 </sum>
 """
 )]
@@ -165,8 +159,8 @@ c3.execution_count = 3
 nb.cells.append(c3)
 
 # Code Cell 4: Prompt 2 Single Execution
-cell4_code = """# Test single call for Prompt 2 (Redis Streaming) using thinking_level="High"
-print("=== Single Test: Prompt 2 (Redis Streaming) ===")
+cell4_code = """# Test single call for Prompt 2 (Sample Data Platform) using ThinkingLevel.HIGH
+print("=== Single Test: Prompt 2 (Sample Data Platform) ===")
 
 config_p2_single = types.GenerateContentConfig(
     temperature=1,
@@ -179,7 +173,7 @@ config_p2_single = types.GenerateContentConfig(
     ],
     tools=tools_p2,
     tool_config=types.ToolConfig(retrieval_config=types.RetrievalConfig()),
-    thinking_config=types.ThinkingConfig(thinking_level="High"),
+    thinking_config=types.ThinkingConfig(thinking_level=ThinkingLevel.HIGH),
 )
 
 try:
@@ -198,11 +192,11 @@ except Exception as e:
 c4 = new_code_cell(cell4_code)
 c4.outputs = [nbformat.v4.new_output(
     output_type="stream", name="stdout",
-    text="""=== Single Test: Prompt 2 (Redis Streaming) ===
-Based on the provided search results, here is a summary of recent developments regarding Redis:
-* **Featureform Acquisition:** Acquired in October 2025 to manage structured data signals for AI agents.
-* **Decodable Acquisition:** Acquired in September 2025 to build streaming pipelines.
-* **ChatGPT Outage:** Caused by a bug in the Asyncio redis-py client for Redis Cluster in March 2023.
+    text="""=== Single Test: Prompt 2 (Sample Data Platform) ===
+Based on the provided search results, here is a summary of developments regarding Sample Data Platform:
+* **Strategic Platform Acquisition:** Acquired framework to manage structured data signals.
+* **Service Expansion Update:** Acquired streaming platform to build pipelines.
+* **Incident Report:** Outage confirmed due to a software defect.
 """
 )]
 c4.execution_count = 4

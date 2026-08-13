@@ -13,9 +13,7 @@ client = genai.Client(
 )
 
 system_instruction = """<instructions>
-  I am a sourcing manager seeking to keep track of news regarding key suppliers for my bank. My objective is to summarize all negative developments that may indicate a potential business disruption, degradation, or change in the products or services provided by the supplier.
-
-  Please analyze the combined links and summaries provided within the <text> tags and provide an overall summary of the relevant adverse developments regarding the specified supplier within the <entity> tags.
+  Analyze the combined links and summaries provided within the <text> tags and provide an overall summary regarding the entity specified within the <entity> tags.
 
   # Output Format Constraints
 Provide your output strictly in the format below.
@@ -23,21 +21,21 @@ Provide your output strictly in the format below.
   **CRITICAL:** Do not wrap the output in markdown code blocks (such as `xml), HTML wrapper tags, or any other introductory/concluding text. Only output the three XML tags below.
 
   <think>
-Briefly describe the adverse aspects identified for overall summarization in bullet points.
+Briefly describe the key aspects identified for overall summarization in bullet points.
 </think>
 <adv>ADVERSE</adv>
 <sum>
-Provide a brief overall summary of the adverse developments related to the entity, strictly in English.
+Provide a brief overall summary related to the entity, strictly in English.
 </sum>
 
   </instructions>"""
 
-entity_data = "<entity>Acme Corp</entity>"
+entity_data = "<entity>Sample Entity</entity>"
 text_data = """<text>
-- Link: http://news.example.com/acme-outage
-Summary: Acme Corp suffered a major cloud infrastructure outage impacting financial partners for 6 hours.
-- Link: http://news.example.com/acme-layoffs
-Summary: Acme Corp announced a 15% reduction in force affecting their customer support teams.
+- Link: http://news.example.com/item-1
+Summary: Sample Entity suffered a major cloud infrastructure outage impacting partners for 6 hours.
+- Link: http://news.example.com/item-2
+Summary: Sample Entity announced workforce restructuring affecting customer support teams.
 </text>"""
 
 full_prompt = f"{entity_data}\n{text_data}"

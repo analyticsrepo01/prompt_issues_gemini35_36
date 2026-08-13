@@ -12,8 +12,8 @@ When generating responses with `gemini-3.5-flash`, the model allocates reasoning
 
 | Prompt Scenario | Formatting / Interaction | `ThinkingLevel.LOW` | `ThinkingLevel.HIGH` | No `ThinkingConfig` (Default) |
 | :--- | :--- | :---: | :---: | :---: |
-| **Prompt 1 (Supplier News)** | Unary + Strict XML Tags (`<think>`, `<adv>`, `<sum>`) | ⚠️ **~50% NO_RESPONSE** | ✅ **100% SUCCESS** | ✅ **100% SUCCESS** |
-| **Prompt 2 (Redis News)** | Stream + Tools (`GoogleSearch`, `GoogleMaps`) | ✅ **100% SUCCESS** | ✅ **100% SUCCESS** | ✅ **100% SUCCESS** |
+| **Prompt 1 (XML Schema Format)** | Unary + Strict XML Tags (`<think>`, `<adv>`, `<sum>`) | ⚠️ **~50% NO_RESPONSE** | ✅ **100% SUCCESS** | ✅ **100% SUCCESS** |
+| **Prompt 2 (Search Stream)** | Stream + Tools (`GoogleSearch`, `GoogleMaps`) | ✅ **100% SUCCESS** | ✅ **100% SUCCESS** | ✅ **100% SUCCESS** |
 
 ---
 
